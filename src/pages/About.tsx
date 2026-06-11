@@ -75,7 +75,7 @@ export default function About() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { name: 'Александр Орлов', role: 'Основатель и CEO', initial: 'АО' },
+            { name: 'Барсуков Михаил', role: 'Основатель и CEO', initial: 'БМ' },
             { name: 'Мария Белова', role: 'Главный дизайнер', initial: 'МБ' },
             { name: 'Дмитрий Черных', role: 'Директор по продажам', initial: 'ДЧ' },
             { name: 'Анастасия Лещева', role: 'Руководитель доставки', initial: 'АЛ' },
