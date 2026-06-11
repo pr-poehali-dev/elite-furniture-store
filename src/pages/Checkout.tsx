@@ -4,9 +4,38 @@ import Icon from '@/components/ui/icon';
 import Breadcrumbs from '@/components/shared/Breadcrumbs';
 import { useApp } from '@/context/AppContext';
 
+interface FieldProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  placeholder?: string;
+  error?: string;
+}
+
+function Field({ label, value, onChange, type = 'text', placeholder, error }: FieldProps) {
+  return (
+    <div>
+      <label className="block text-gray-400 text-sm font-body mb-1.5">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-white font-body text-sm placeholder:text-gray-600 outline-none transition-colors ${error ? 'border-red-500' : 'border-white/10 focus:border-orange-500/50'}`}
+      />
+      {error && <p className="text-red-400 text-xs font-body mt-1">{error}</p>}
+    </div>
+  );
+}
+
 export default function Checkout() {
   const { cart, cartTotal, clearCart } = useApp();
-  const [form, setForm] = useState({ name: '', phone: '', email: '', address: '', comment: '' });
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [comment, setComment] = useState('');
   const [delivery, setDelivery] = useState('courier');
   const [payment, setPayment] = useState('card');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -14,10 +43,10 @@ export default function Checkout() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = 'Введите имя';
-    if (!/^\+?[0-9\s\-()]{10,}$/.test(form.phone)) e.phone = 'Введите корректный телефон';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Введите корректный email';
-    if (delivery === 'courier' && !form.address.trim()) e.address = 'Введите адрес доставки';
+    if (!name.trim()) e.name = 'Введите имя';
+    if (!/^\+?[0-9\s\-()]{10,}$/.test(phone)) e.phone = 'Введите корректный телефон';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = 'Введите корректный email';
+    if (delivery === 'courier' && !address.trim()) e.address = 'Введите адрес доставки';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -48,20 +77,6 @@ export default function Checkout() {
     );
   }
 
-  const Field = ({ label, name, type = 'text', placeholder }: { label: string; name: keyof typeof form; type?: string; placeholder?: string }) => (
-    <div>
-      <label className="block text-gray-400 text-sm font-body mb-1.5">{label}</label>
-      <input
-        type={type}
-        value={form[name]}
-        onChange={e => setForm(f => ({ ...f, [name]: e.target.value }))}
-        placeholder={placeholder}
-        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-white font-body text-sm placeholder:text-gray-600 outline-none transition-colors ${errors[name] ? 'border-red-500' : 'border-white/10 focus:border-orange-500/50'}`}
-      />
-      {errors[name] && <p className="text-red-400 text-xs font-body mt-1">{errors[name]}</p>}
-    </div>
-  );
-
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
       <Breadcrumbs crumbs={[{ label: 'Корзина', path: '/cart' }, { label: 'Оформление заказа' }]} />
@@ -76,10 +91,10 @@ export default function Checkout() {
             <div className="glass-card rounded-2xl p-6">
               <h2 className="font-display text-white font-bold mb-5 text-lg">КОНТАКТНЫЕ ДАННЫЕ</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Имя и фамилия *" name="name" placeholder="Иван Иванов" />
-                <Field label="Телефон *" name="phone" type="tel" placeholder="+7 (999) 123-45-67" />
+                <Field label="Имя и фамилия *" value={name} onChange={setName} placeholder="Иван Иванов" error={errors.name} />
+                <Field label="Телефон *" value={phone} onChange={setPhone} type="tel" placeholder="+7 (999) 123-45-67" error={errors.phone} />
                 <div className="sm:col-span-2">
-                  <Field label="Email *" name="email" type="email" placeholder="ivan@example.com" />
+                  <Field label="Email *" value={email} onChange={setEmail} type="email" placeholder="ivan@example.com" error={errors.email} />
                 </div>
               </div>
             </div>
@@ -107,7 +122,7 @@ export default function Checkout() {
                 ))}
               </div>
               {delivery === 'courier' && (
-                <Field label="Адрес доставки *" name="address" placeholder="Улица, дом, квартира, город" />
+                <Field label="Адрес доставки *" value={address} onChange={setAddress} placeholder="Улица, дом, квартира, город" error={errors.address} />
               )}
             </div>
 
@@ -132,8 +147,8 @@ export default function Checkout() {
             <div className="glass-card rounded-2xl p-6">
               <h2 className="font-display text-white font-bold mb-5 text-lg">КОММЕНТАРИЙ</h2>
               <textarea
-                value={form.comment}
-                onChange={e => setForm(f => ({ ...f, comment: e.target.value }))}
+                value={comment}
+                onChange={e => setComment(e.target.value)}
                 placeholder="Особые пожелания, уточнения к заказу..."
                 rows={3}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-body text-sm placeholder:text-gray-600 outline-none focus:border-orange-500/50 resize-none"
