@@ -41,6 +41,7 @@ const SOFA_IMG = 'https://cdn.poehali.dev/projects/f2b06d1e-800b-4137-8596-e02cf
 const BED_IMG = 'https://cdn.poehali.dev/projects/f2b06d1e-800b-4137-8596-e02cfa0cfcdf/files/75735f59-6015-40bd-8d25-ffcbbc1b2a0c.jpg';
 const TABLE_IMG = 'https://cdn.poehali.dev/projects/f2b06d1e-800b-4137-8596-e02cfa0cfcdf/files/fa4c298c-4ffb-43d3-b5f2-283b50eee90a.jpg';
 const WARDROBE_IMG = 'https://cdn.poehali.dev/projects/f2b06d1e-800b-4137-8596-e02cfa0cfcdf/files/286ba6c1-a8db-4b4a-acae-4131ce0eda88.jpg';
+const CHAIR_IMG = TABLE_IMG;
 
 export const PRODUCTS: Product[] = [
   {
